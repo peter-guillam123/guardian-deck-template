@@ -1,0 +1,354 @@
+<!DOCTYPE html><html lang="en"><head>
+<meta charset="UTF-8">
+<title>Project title</title>
+<link rel="stylesheet" href="styles.css">
+<style>
+  /* ============================================================
+     Reusable component styles for this deck.
+     The base patterns (.slide, .slide-title, .kicker, .slide-foot,
+     .rule-band, .quad-grid, .aim, .pillar etc.) live in styles.css.
+     This block adds slide-level polish: red-italic accents in titles,
+     a soft 240ms crossfade between slides, a full-bleed image helper,
+     and a cover-specific roster/date layout. Slide-specific
+     components for any given deck should be added below.
+     ============================================================ */
+
+  /* Editorial red accent on the italic word in paper-slide titles */
+  .slide-title em {
+    color: var(--news-red);
+    font-style: italic;
+    font-weight: 500;
+  }
+
+  /* Soft 240ms crossfade between slides */
+  .slide {
+    transition: opacity 240ms ease, visibility 0s linear 240ms;
+  }
+  .slide[data-deck-active] {
+    transition: opacity 240ms ease, visibility 0s linear 0s;
+  }
+
+  /* Section-opener italic word lands a beat after the rest of the headline */
+  .section-opener h1 em { opacity: 0; }
+  [data-deck-active].section-opener h1 em {
+    animation: emReveal 700ms ease 550ms both;
+  }
+  @keyframes emReveal {
+    to { opacity: 1; }
+  }
+
+  /* Full-bleed slide image with subtle reveal */
+  .slide-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    opacity: 0;
+    transform: scale(0.97);
+    transform-origin: center center;
+  }
+  [data-deck-active] .slide-image {
+    animation: imageReveal 720ms cubic-bezier(.2,.8,.2,1) 220ms both;
+  }
+  @keyframes imageReveal {
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  /* Staggered fade-up reveal for card grids (.quad-card, .aim) */
+  .quad-card, .aim {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  [data-deck-active] .quad-card,
+  [data-deck-active] .aim {
+    animation: cardIn 420ms cubic-bezier(.2,.8,.2,1) both;
+  }
+  [data-deck-active] .quad-card:nth-child(1),
+  [data-deck-active] .aim:nth-child(1) { animation-delay: 120ms; }
+  [data-deck-active] .quad-card:nth-child(2),
+  [data-deck-active] .aim:nth-child(2) { animation-delay: 200ms; }
+  [data-deck-active] .quad-card:nth-child(3),
+  [data-deck-active] .aim:nth-child(3) { animation-delay: 280ms; }
+  [data-deck-active] .quad-card:nth-child(4) { animation-delay: 360ms; }
+  @keyframes cardIn {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ============================================================
+     Cover slide layout — roster + date row.
+     Edit copy in the cover <section> below; this CSS lays it out.
+     ============================================================ */
+  .cover .wordmark { font-size: 168px; }
+  .cover .wordmark .q-mark { color: var(--news-red); font-style: normal; font-weight: 700; }
+  .cover .wordmark em { color: var(--ink); }
+
+  .cover-meta-row {
+    display: grid;
+    grid-template-columns: 1.4fr 1fr;
+    gap: 80px;
+    align-items: end;
+  }
+  .group-roster {
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 22px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    letter-spacing: 0;
+    max-width: 1000px;
+  }
+  .group-roster ul { list-style: none; margin: 0; padding: 0; }
+  .group-roster li { display: inline; }
+  .group-roster li:not(:last-child)::after {
+    content: '  ·  ';
+    color: var(--ink-mute);
+    font-weight: 400;
+  }
+  .cover-stat-block { text-align: right; }
+  .cover-stat-block .stat-line {
+    font-family: var(--mono);
+    font-size: 24px;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--ink-mute);
+    margin: 0;
+  }
+  .cover-stat-block .stat-line strong {
+    display: block;
+    font-family: var(--body);
+    font-weight: 400;
+    font-size: 28px;
+    line-height: 1.05;
+    letter-spacing: 0;
+    text-transform: none;
+    color: var(--ink-soft);
+  }
+  .cover .kicker .group-tag {
+    display: inline-block;
+    background: var(--news-red);
+    color: var(--paper);
+    padding: 4px 12px 6px;
+    margin-right: 14px;
+    letter-spacing: 0.16em;
+  }
+  .cover .slide-foot { border-top: none; padding-top: 0; }
+
+  /* Hide the duplicative footer wm on non-section-opener slides */
+  .slide:not(.section-opener) .slide-foot .wm { display: none; }
+
+  /* ============================================================
+     Quote panel — reusable hero-quote treatment.
+     ============================================================ */
+  .deck-quote {
+    background: var(--paper-deep);
+    border-left: 6px solid var(--news-red);
+    padding: 36px 56px 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    max-width: 80ch;
+  }
+  .deck-quote-body {
+    font-family: var(--display);
+    font-style: italic;
+    font-weight: 500;
+    font-size: 44px;
+    line-height: 1.18;
+    color: var(--ink);
+    margin: 0;
+  }
+  .deck-quote-body em { color: var(--news-red); font-style: italic; }
+  .deck-quote-attr {
+    font-family: var(--body);
+    font-size: 19px;
+    line-height: 1.35;
+    color: var(--ink-mute);
+    margin: 0;
+  }
+  .deck-quote-attr strong { font-weight: 700; color: var(--ink); }
+</style>
+</head>
+<body>
+
+<deck-stage width="1920" height="1080">
+
+  <!-- ============================================================
+       SLIDE 1 — Cover
+       ============================================================ -->
+  <section class="slide cover" data-label="Cover">
+    <div class="rule-band"></div>
+
+    <div>
+      <p class="kicker"><span class="group-tag">Project</span>Subtitle · Context · Date</p>
+      <h1 class="wordmark">Project title<br>goes <em>here<span class="q-mark">.</span></em></h1>
+    </div>
+
+    <div class="cover-meta-row">
+      <div class="group-roster">
+        <ul>
+          <li>First Last</li>
+          <li>First Last</li>
+          <li>First Last</li>
+          <li>First Last</li>
+        </ul>
+      </div>
+      <div class="cover-stat-block">
+        <p class="stat-line"><strong>Date · Date</strong></p>
+      </div>
+    </div>
+
+    <div class="slide-foot">
+      <span class="wm">Project · Context</span>
+      <span class="num">01 / NN</span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SLIDE 2 — Section opener (ink + yellow italic)
+       ============================================================ -->
+  <section class="slide ink section-opener" data-label="Section opener">
+    <div class="rule-band"></div>
+
+    <div class="chapter-num">Part 01 — of 03</div>
+    <p class="section-kicker">Optional kicker line above the headline</p>
+    <h1>Section name <em>here.</em></h1>
+    <p class="section-dek">An optional one- or two-sentence dek explaining what this section is about. The italic word above lands a beat after the rest of the headline.</p>
+
+    <div class="slide-foot">
+      <span class="wm">Project · Part 01</span>
+      <span class="num">02 / NN</span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SLIDE 3 — Basic content slide (kicker, title, subtitle, body)
+       ============================================================ -->
+  <section class="slide" data-label="Content slide">
+    <div class="rule-band"></div>
+
+    <p class="kicker">Part 01 · Section name</p>
+    <h2 class="slide-title">A slide title with an <em>italic</em> accent.</h2>
+    <p class="slide-subtitle">An optional subtitle or dek. Keeps to one or two lines. Sets up the body content below.</p>
+
+    <div class="slide-body">
+      <p>Body copy goes here. Use this slide template for any slide that's mostly text. The deck's body egyptian serif handles long-form copy comfortably.</p>
+    </div>
+
+    <div class="slide-foot">
+      <span class="wm">Project · Part 01</span>
+      <span class="num">03 / NN</span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SLIDE 4 — Three-card row (.aims pattern)
+       Each card has a mono number, display heading, body text.
+       Border-top cycles blue / red / green automatically.
+       ============================================================ -->
+  <section class="slide" data-label="Three cards">
+    <div class="rule-band"></div>
+
+    <p class="kicker">Part 01 · Section name</p>
+    <h2 class="slide-title">Three things to <em>say</em>.</h2>
+
+    <div class="slide-body">
+      <div class="aims">
+        <div class="aim">
+          <span class="aim-num">01</span>
+          <h3>First point</h3>
+          <p>A short paragraph supporting the first point. Body egyptian, ink-soft colour, comfortable reading size.</p>
+        </div>
+        <div class="aim">
+          <span class="aim-num">02</span>
+          <h3>Second point</h3>
+          <p>Same shape, second card. The top border colour rotates automatically — blue, red, green.</p>
+        </div>
+        <div class="aim">
+          <span class="aim-num">03</span>
+          <h3>Third point</h3>
+          <p>Third card. Cards stagger in left-to-right on slide arrival via the existing animation pattern.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="slide-foot">
+      <span class="wm">Project · Part 01</span>
+      <span class="num">04 / NN</span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SLIDE 5 — Image-only slide
+       Drop a PNG into images/ at 16:9 (1672×941 or similar)
+       for a full-bleed reveal.
+       ============================================================ -->
+  <section class="slide" data-label="Image slide">
+    <div class="rule-band"></div>
+
+    <p class="kicker">Part 01 · Section name</p>
+
+    <div class="slide-body">
+      <img class="slide-image" src="images/placeholder.png" alt="Description of the image">
+    </div>
+
+    <div class="slide-foot">
+      <span class="wm">Project · Part 01</span>
+      <span class="num">05 / NN</span>
+    </div>
+  </section>
+
+  <!-- ============================================================
+       SLIDE 6 — Quote panel
+       Paper-deep box with red left rule, display italic body,
+       attribution underneath. Use the <em> for the punctum.
+       ============================================================ -->
+  <section class="slide" data-label="Quote">
+    <div class="rule-band"></div>
+
+    <p class="kicker">Part 01 · Section name</p>
+    <h2 class="slide-title">A quote that <em>lands</em>.</h2>
+
+    <div class="slide-body">
+      <aside class="deck-quote">
+        <p class="deck-quote-body">"A pull quote goes here. Italic display serif, set in a paper-deep panel with a red left rule. The italic em emphasises the <em>key phrase</em>."</p>
+        <p class="deck-quote-attr"><strong>Speaker name</strong>, role or affiliation</p>
+      </aside>
+    </div>
+
+    <div class="slide-foot">
+      <span class="wm">Project · Part 01</span>
+      <span class="num">06 / NN</span>
+    </div>
+  </section>
+
+</deck-stage>
+
+<script src="deck-stage.js"></script>
+
+<script>
+  /* Auto-number slide footers: writes "NN / TT" into each slide's .num.
+     No manual page-number bookkeeping when slides are inserted or moved. */
+  (() => {
+    const slides = document.querySelectorAll('deck-stage > section');
+    const total = String(slides.length).padStart(2, '0');
+    slides.forEach((slide, i) => {
+      const num = slide.querySelector('.slide-foot .num');
+      if (num) num.textContent = `${String(i + 1).padStart(2, '0')} / ${total}`;
+    });
+  })();
+
+  /* Restart any keyframe animation on the active slide every time it
+     becomes active, so reveals replay on backward / forward navigation. */
+  document.querySelector('deck-stage').addEventListener('slidechange', (e) => {
+    const slide = e.detail.slide;
+    if (!slide) return;
+    const els = slide.querySelectorAll('.quad-card, .aim, .slide-image, .section-opener h1 em');
+    els.forEach((el) => {
+      el.style.animation = 'none';
+      void el.offsetWidth;
+      el.style.animation = '';
+    });
+  });
+</script>
+
+</body></html>
