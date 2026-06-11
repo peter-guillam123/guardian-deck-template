@@ -1,6 +1,14 @@
 # Guardian deck template
 
-Skeleton for HTML slide decks in the Guardian editorial style. Use as a starting point: spin a new repo from this template, edit `index.html`, drop images in `images/`, push to `main`, and GitHub Pages serves the result.
+Skeleton for HTML slide decks in the Guardian editorial style — second
+edition. Spin a new repo from this template, replace the placeholder words
+in `index.html`, drop images in `images/`, push to `main`, and GitHub Pages
+serves the result. The reference implementation (and the deck this system
+was built for) is
+[board-and-trust-training](https://github.com/peter-guillam123/board-and-trust-training);
+its first edition is archived there at
+[/first-edition/](https://peter-guillam123.github.io/board-and-trust-training/first-edition/)
+if you want to see how far the second edition moved things on.
 
 ## Starting a new deck
 
@@ -8,25 +16,75 @@ In Claude Code, in an empty folder, say:
 
 > "Set up a new deck from my template, call it `xyz`."
 
-Claude will clone the template into the folder via `gh repo create --template`, push the first commit, and hand back the live URL once Pages has built. No terminal needed.
+Claude will clone the template into the folder via `gh repo create
+--template`, push the first commit, and hand back the live URL once Pages
+has built. Then describe the slides — the words you want, in your words —
+and let Claude fit them to the patterns. The rules Claude follows live in
+`CLAUDE.md` in this repo, so you don't have to repeat them.
 
 ## What's in here
 
-- `index.html` — six reference slides (cover, section opener, content, three-card row, image-only, quote). Replace the placeholder copy. Copy and adapt the slide patterns for new slides.
-- `styles.css` — Guardian fonts (loaded from `assets.guim.co.uk`), design tokens (`--paper`, `--ink`, `--guardian-blue`, `--news-red`, `--guardian-yellow`, `--eco-green`), and base components.
-- `deck-stage.js` — the `<deck-stage>` web component. Handles keyboard navigation (←/→, PageUp/PageDown, Space, Home/End, R, number keys), auto-scaling to viewport, tap zones on mobile, idle-fading overlay, and print rules that lay one slide per page at 1920×1080 for Cmd-P → Save as PDF.
-- `.github/workflows/pages.yml` — GitHub Actions workflow that deploys to Pages on every push to `main`. Has concurrency control so a newer push cancels an in-flight build rather than queuing behind it.
-- `images/` — drop PNGs and JPGs here. Reference them as `images/filename.png`.
+- `index.html` — twenty reference slides, one per pattern: cover, agenda,
+  section opener (ghost numeral + drawn underline), plate-card trio, split
+  image/text, step cards, staged line chart with count-ups, stat pair +
+  ledger, rulebook ledger, image + open text blocks, conversation rail,
+  picture triptych, diptych, curve timeline, ink pull quote, self-typing
+  prompt, case ledger, exchanges, chat stream, numbered ways. Replace the
+  placeholder copy; delete what you don't need.
+- `styles.css` — the full design system: the real Guardian font cuts
+  (including the drawn italics and Black, from `assets.guim.co.uk`),
+  design tokens, paper-fibre grain and press vignette, slide chrome,
+  every component, and the motion keyframes (including a CSS `linear()`
+  spring).
+- `motion.js` — the choreography engine: folio numbering, the progress
+  seam, masked word reveals, `data-fx` replays on every slide visit,
+  count-up figures, live-typing prompts and the staged chart draw. Three
+  safety nets: no JavaScript hides nothing, `prefers-reduced-motion` gets
+  a static deck, print forces final states.
+- `deck-stage.js` — the `<deck-stage>` web component. Keyboard navigation
+  (←/→, PageUp/PageDown, Space, Home/End, R, number keys), auto-scaling,
+  tap zones on mobile, and print rules that lay one slide per page at
+  1920×1080 for Cmd-P → Save as PDF.
+- `CLAUDE.md` — the build rules and the motion grammar, written for the
+  Claude session doing the work.
+- `.github/workflows/pages.yml` — deploys to Pages on every push to
+  `main`, with concurrency control.
 
 ## Working in the deck
 
-Open `index.html` in a browser to preview. Arrow keys / space to navigate, R to reset, Cmd-P → Save as PDF for one-slide-per-page export at 1920×1080.
-
-When you want a more elaborate component than the six examples — animated chart, two-column callout, worksheet sheet, chevron flow, table — the [awayday repo](https://github.com/peter-guillam123/awayday) has working implementations of all of those. Lift the pattern from there.
+Open `index.html` in a browser to preview. Arrow keys / space to navigate,
+R to reset, Cmd-P → Save as PDF for a one-slide-per-page export. Slide
+numbers auto-fill — write `01 / NN` and motion.js does the rest.
+Animations replay on every slide arrival, backwards included.
 
 ## Notes
 
-- **Fonts** load from `assets.guim.co.uk`. The deck only renders correctly online. The CSS falls back to Georgia / Helvetica system fonts if the CDN is unreachable, but the visual is noticeably different. If you're presenting somewhere with patchy wifi, self-hosting the four `.woff2` files is a 10-minute job.
-- **Slide page numbers** are auto-filled by the inline JS at the bottom of `index.html`. Don't manually write `"03 / 12"` — write `"03 / NN"` or any placeholder; the JS rewrites it on load with the actual position and total.
-- **Animations replay** on every slide arrival, including when you navigate backwards, via the `slidechange` event listener. When you add new animated elements, append their selector to the `querySelectorAll(...)` list in the inline `<script>`.
-- **The `.slide-title em`** rule gives the italic word in any paper-slide title the editorial red colour. The same pattern in `.section-opener h1 em` gives section openers their yellow italic. One italic word per title is the deck convention.
+- **Fonts** load from `assets.guim.co.uk`, so the deck only renders
+  correctly online. The CSS falls back to Georgia / Helvetica if the CDN
+  is unreachable, but the visual is noticeably different. Presenting
+  somewhere with patchy wifi? Self-hosting the `.woff2` files is a
+  10-minute job.
+- **One italic word per title** — red on paper, yellow on ink — is the
+  deck's punctuation. Keep it to one.
+- **Images dissolve** (`data-fx="photo"`); the kit deliberately has no
+  directional wipes.
+
+## Changelog
+
+### 11 June 2026 — Second edition
+
+The template catches up with everything the Board and Trust rework
+taught us. In: the real Guardian italic and Black cuts, masked word-by-
+word title reveals, paper grain and press vignette, plate cards, ghost
+numerals on section openers, the photographic image dissolve, count-up
+figures, self-typing prompts, the staged chart draw, a progress seam,
+and `motion.js` to run it all — with no-JS, reduced-motion and print
+fallbacks. The six first-edition skeleton slides became twenty, one per
+pattern, with instructive placeholder copy that explains each shape as
+you replace it. New `CLAUDE.md` carries the build rules so future
+sessions start already knowing the house style.
+
+### Earlier — Initial template
+
+Framework, six skeleton slides and a README, extracted from the first
+generation of decks.
