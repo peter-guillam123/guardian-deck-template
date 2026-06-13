@@ -8,6 +8,10 @@ bearing and shared across every deck built from it; one file is yours.
   chrome, every slide component, all motion keyframes. Extend it only by
   adding new components at the bottom; don't fork per-slide styles into
   the HTML.
+- `grid-overlay.js` — a Müller-Brockmann grid instrument. Press **G** to draw
+  the column + baseline grid the deck is built against. **Rarely needs editing**;
+  it reads the `--grid-*` tokens from `styles.css`. Off by default, changes
+  nothing — it exists to *verify* alignment, not to alter it.
 - `motion.js` — the choreography engine. **Rarely needs editing.** It
   numbers folios, fills the progress seam, splits `[data-split]` titles
   into masked words, replays `[data-fx]` reveals on every slide visit,
@@ -36,6 +40,32 @@ bearing and shared across every deck built from it; one file is yours.
    Cmd-P → Save as PDF must also produce complete slides (print CSS
    forces final animation states — keep new animated elements covered by
    the `@media print` block if you add any).
+
+## The grid
+
+The deck sits on a Müller-Brockmann modular grid, defined once in `styles.css`
+`:root` and read by the chrome, the card gutters and the overlay alike — one
+source of truth, so content and grid can never drift:
+
+| token | value | meaning |
+| --- | --- | --- |
+| `--grid-margin` | 120px | side margins (the `.rule-band` and folio align here) |
+| `--grid-top` / `--grid-bottom` | 100 / 80px | top / bottom margins of the type area |
+| `--grid-cols` | 12 | columns |
+| `--grid-gutter` | 24px | gutter — a 3-up row on this gutter lands on exactly 4 + 4 + 4 columns |
+| `--grid-baseline` | 12px | vertical rhythm unit (major line every 3rd = 36px) |
+
+Place multi-column content on column lines: a 3-up uses `gap: var(--grid-gutter)`
+(→ 4 + 4 + 4), a 2-up on the gutter splits 6 + 6. Press **G** while previewing
+to check it. But the grid is **an aid, not a law** — keep deliberate spacing
+where it earns its place (a generous gap that holds an arrow gutter, a calm
+contents page). Snap where it helps; don't flatten what's hand-tuned.
+
+**Take the discipline, not the dogma.** The grid's source skill also prescribes
+white paper and a sans-serif and bans warm tones — those rules target exactly
+the Guardian look this kit *is*. We keep the cream paper, the Guardian blue /
+red / yellow / green, and the serif display type. Grid yes; palette and type
+no.
 
 ## The motion grammar
 

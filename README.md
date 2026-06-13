@@ -45,6 +45,10 @@ and let Claude fit them to the patterns. The rules Claude follows live in
   (←/→, PageUp/PageDown, Space, Home/End, R, number keys), auto-scaling,
   tap zones on mobile, and print rules that lay one slide per page at
   1920×1080 for Cmd-P → Save as PDF.
+- `grid-overlay.js` — a Müller-Brockmann grid instrument. Press **G** while
+  previewing to draw the 12-column + baseline grid the deck is built against.
+  Off by default; it reads the `--grid-*` tokens in `styles.css` and changes
+  nothing — it just lets you check alignment.
 - `CLAUDE.md` — the build rules and the motion grammar, written for the
   Claude session doing the work.
 - `.github/workflows/pages.yml` — deploys to Pages on every push to
@@ -70,6 +74,16 @@ Animations replay on every slide arrival, backwards included.
   directional wipes.
 
 ## Changelog
+
+### 11 June 2026 — Müller-Brockmann grid baked in
+
+`styles.css` now carries a `--grid-*` source of truth (12 columns, 120px
+margins, 12px baseline, 24px gutter) that the chrome, the card gutters and a
+new toggle-able overlay (`grid-overlay.js`, press **G**) all read — so any deck
+built from this kit starts grid-true and verifiable. The three-up patterns sit
+on an exact 4 + 4 + 4 column rhythm. `CLAUDE.md` gains a grid section, including
+the one rule we *don't* take from the source skill: its white-paper / sans-serif
+house style, which would undo the Guardian look this kit exists to produce.
 
 ### 11 June 2026 — Second edition
 
